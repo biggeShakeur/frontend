@@ -1,9 +1,8 @@
 import React from 'react';
-import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import { Button, Modal } from "react-boostrap";
-import { Carousel } from 'react-responsive-carousel';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Button, Modal } from "react-bootstrap";
+import Carousel from 'react-bootstrap/Carousel';
 import './App.css';
 
 //Create an app compnent from react's original component. Similar to how classes work

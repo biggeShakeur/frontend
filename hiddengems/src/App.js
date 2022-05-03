@@ -4,7 +4,7 @@ import Footer from "./Footer.js";
 import Login from "./Login";
 import Profile from "./Profile";
 import './App.css';
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { withAuth0 } from '@auth0/auth0-react';
 import Trip from "./Trip";
 
@@ -43,7 +43,7 @@ class App extends React.Component {
       <>
         <Router>
           <Header user={this.state.user} onLogout={this.logoutHandler} />
-          <Switch>
+          <Routes>
             <Route exact path="/">
               {/* TODO: if the user is logged in, render the `BestBooks` component, if they are not, render the `Login` component */}
               {this.props.auth0.isAuthenticated ? <Trip/> : <Login loginHandler={this.loginHandler}/>}
@@ -52,7 +52,7 @@ class App extends React.Component {
             <Route path = "/Profile">
               {this.props.auth0.isAuthenticated ? <Profile/>: null}
             </Route>
-          </Switch>
+          </Routes>
           <Footer />
         </Router>
       </>

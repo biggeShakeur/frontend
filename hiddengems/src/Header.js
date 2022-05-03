@@ -1,6 +1,7 @@
 import { Navbar, NavItem } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import LogoutButton from './LogoutButton.js'
+import React from 'react';
 
 class Header extends React.Component {
   render() {
