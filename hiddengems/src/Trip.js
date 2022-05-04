@@ -17,7 +17,7 @@ class Trip extends React.Component {
   // This function provides you with the ability to request(or 'get') map data.
   getMap = async () => {
     try {
-       let mapData = 'http://localhost:3001/trip';
+       let mapData = `${process.env.REACT_APP_SERVER}/trip`;
        let mapResults = await axios.get(mapData);
        console.log(mapResults.data);
        this.setState({
@@ -35,40 +35,40 @@ class Trip extends React.Component {
   render() {
 
     //this.props.data holds the array of objects for the user's trips
-    const tripMap = this.props.data.map((x, index) => (
+    // const tripMap = this.props.data.map((x, index) => (
 
-      //create an array of trips bases on 
-      <Carousel>
-        <Carousel.Item key={index}>
-          <img
-            className="tripImg"
-            src={x.image}
-            alt={x.location}
-          />
-          <Carousel.Caption>
-            <h3>{x.location}</h3>
-            <p>{x.subject}</p>
-          </Carousel.Caption>
-          <div>
-            <Button onClick="">
-              Edit
-            </Button>
-            <Button onClick="">
-              Delete
-            </Button>
+    //   //create an array of trips bases on 
+    //   <Carousel>
+    //     <Carousel.Item key={index}>
+    //       {/* <img
+    //         className="tripImg"
+    //         src={x.image}
+    //         alt={x.location}
+    //       /> */}
+    //       <Carousel.Caption>
+    //         {/* <h3>{x.location}</h3>
+    //         <p>{x.subject}</p> */}
+    //       </Carousel.Caption>
+    //       <div>
+    //         <Button onClick="">
+    //           Edit
+    //         </Button>
+    //         <Button onClick="">
+    //           Delete
+    //         </Button>
            
-          </div>
-        </Carousel.Item>
-      </Carousel>
+    //       </div>
+    //     </Carousel.Item>
+    //   </Carousel>
 
-    ));
+    // ));
 
     //render the tripMap array
     return (
       <>
         <h3>Trips</h3>
         <Button onClick={this.getMap}>Get trips Button</Button>
-        {tripMap}
+        {/* {tripMap} */}
 
       </>
     )
