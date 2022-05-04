@@ -1,6 +1,5 @@
 import React from 'react';
 //import ReactDOM from 'react-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button} from "react-bootstrap";
 import Carousel from 'react-bootstrap/Carousel';
 import './App.css';
