@@ -1,33 +1,45 @@
 import React from 'react';
 //import ReactDOM from 'react-dom';
-import { Button} from "react-bootstrap";
+import { Form, Button} from "react-bootstrap";
 import Carousel from 'react-bootstrap/Carousel';
 import './App.css';
 import axios from 'axios'
-//Create an app compnent from react's original component. Similar to how classes work
+//Create an app component from react's original component. Similar to how classes work
 class Trip extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      map: []
+      map: [],
+      location: ''
     }
   }
 
 
   // This function provides you with the ability to request(or 'get') map data.
-  getMap = async () => {
+  getMap = async (e) => {
+    e.preventDefault();
+    console.log("here");
     try {
-       let mapData = `${process.env.REACT_APP_SERVER}/trip`;
+       let mapData = `${process.env.REACT_APP_SERVER}/trip?location=${this.state.location}`;
+       console.log(mapData);
        let mapResults = await axios.get(mapData);
-       console.log(mapResults.data);
+       console.log(mapResults);
        this.setState({
-         map: mapResults.data
+         map: mapResults.data,
+         location: this.location
        })
     } catch (error) {
-      console.log('Not receiving Maps.')
+      console.log('Not receiving Maps.');
     }
+
   }
 
+ handleInput = (e) => {
+   this.setState({
+     location: e.target.value
+   },console.log(this.state.location));
+   
+  }
 
 
 
@@ -35,19 +47,19 @@ class Trip extends React.Component {
   render() {
 
     //this.props.data holds the array of objects for the user's trips
-    // const tripMap = this.props.data.map((x, index) => (
+    // const tripMap = this.mapResults.map((x, index) => (
 
     //   //create an array of trips bases on 
     //   <Carousel>
     //     <Carousel.Item key={index}>
-    //       {/* <img
+    //       <img
     //         className="tripImg"
-    //         src={x.image}
+    //         //src={x.image}
     //         alt={x.location}
-    //       /> */}
+    //       />
     //       <Carousel.Caption>
-    //         {/* <h3>{x.location}</h3>
-    //         <p>{x.subject}</p> */}
+    //         <h3>{x.location}</h3>
+    //         <p>{x.subject}</p>
     //       </Carousel.Caption>
     //       <div>
     //         <Button onClick="">
@@ -67,6 +79,18 @@ class Trip extends React.Component {
     return (
       <>
         <h3>Trips</h3>
+        <Form onSubmit={this.getMap}>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>Enter a City/County</Form.Label>
+            <Form.Control type="text" placeholder="I.e. Puerto Rico" onInput={this.handleInput}/>
+            <Form.Text className="text-muted">
+            </Form.Text>
+          </Form.Group>
+  <Button variant="primary" type="submit">
+    Submit
+  </Button>
+</Form>
+
         <Button onClick={this.getMap}>Get trips Button</Button>
         {/* {tripMap} */}
 

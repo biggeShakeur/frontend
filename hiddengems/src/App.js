@@ -53,9 +53,10 @@ class App extends React.Component {
             <Route exact path="/">
               {this.props.auth0.isAuthenticated 
               ?
-              <Trip /> 
+              <Trip/> 
               : <><h2>Please log in!</h2></>}
             </Route>
+            <Trip/>
             <Route exact path = "/Profile.js">
               <Profile />
             </Route>
