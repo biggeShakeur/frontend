@@ -40,23 +40,23 @@ class App extends React.Component {
   
   render() {
     return (
-      <>
       <h1>That is soooo irritating!!!!!! </h1>
-        <Router>
-          <Header user={this.state.user} onLogout={this.logoutHandler} />
-          <Switch>
-            <Route exact path="/">
-              {/* TODO: if the user is logged in, render the `BestBooks` component, if they are not, render the `Login` component */}
-              {this.props.auth0.isAuthenticated ? <Trip/> : <Login loginHandler={this.loginHandler}/>}
-            </Route>
-            {/* TODO: add a route with a path of '/profile' that renders a `Profile` component */}
-            <Route path = "/Profile">
-              {this.props.auth0.isAuthenticated && <Profile/>}
-            </Route>
-          </Switch>
-          <Footer />
-        </Router>
-      </>
+      // <>
+      //   <Router>
+      //     <Header user={this.state.user} onLogout={this.logoutHandler} />
+      //     <Switch>
+      //       <Route exact path="/">
+      //         {/* TODO: if the user is logged in, render the `BestBooks` component, if they are not, render the `Login` component */}
+      //         {this.props.auth0.isAuthenticated ? <Trip/> : <Login loginHandler={this.loginHandler}/>}
+      //       </Route>
+      //       {/* TODO: add a route with a path of '/profile' that renders a `Profile` component */}
+      //       <Route path = "/Profile">
+      //         {this.props.auth0.isAuthenticated && <Profile/>}
+      //       </Route>
+      //     </Switch>
+      //     <Footer />
+      //   </Router>
+      // </>
     )
   }
 }
