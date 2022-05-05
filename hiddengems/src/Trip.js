@@ -1,9 +1,10 @@
 import React from 'react';
-import { Form, Button, Card } from "react-bootstrap";
+import { Form, Button, Card, Modal } from "react-bootstrap";
 import placeHolder from './img.jpg';
 import './App.css';
 import { withAuth0 } from '@auth0/auth0-react';
 import axios from 'axios'
+import TripFormModal from './TripFormModal';
 
 //Create an app component from react's original component. Similar to how classes work
 class Trip extends React.Component {
@@ -11,7 +12,8 @@ class Trip extends React.Component {
     super(props);
     this.state = {
       location: '',
-      Triprequest: null
+      Triprequest: null,
+      showModal: false
     }
   }
 
@@ -32,10 +34,75 @@ class Trip extends React.Component {
     }
   }
 
+  handleTripSubmit = (e) => {
+    e.preventDefault();
+    let trip = {
+      title: e.target.title.value,
+      description: e.target.description.value,
+      likes: e.target.likes.value,
+      dislikes: e.target.dislikes.value
+    }
+    this.postTrip(trip);
+  }
+
   handleInput = (e) => {
     this.setState({
       location: e.target.value
     });
+  }
+
+  showModal = () => {
+    this.setState({
+      showModal: true
+    })
+  }
+
+  hideModalHandler = () => {
+    this.setState({
+      showModal: false
+    })
+  }
+
+  getTrip = async (trip) => {
+    try {
+      let url = `${process.env.REACT_APP_SERVER}/trip`
+      let createdTrip = await axios.get(url, trip)
+      this.setState({
+        Triprequest: createdTrip
+      })
+    }
+    catch (err) {
+      console.log('We have an error: ', err.response.data)
+    }
+  }
+
+  postTrip = async (trip) => {
+    try {
+      let url = `${process.env.REACT_APP_SERVER}/trip`
+      let createdTrip = await axios.post(url, trip)
+      this.setState({
+        Triprequest: [...this.state.Triprequest, createdTrip.data]
+      })
+    }
+    catch (err) {
+      console.log('We have an error: ', err.response.data)
+    }
+  }
+
+  updateTrip = async (tripToUpdate) => {
+    try {
+      let url = `${process.env.REACT_APP_SERVER}/trip/${tripToUpdate._id}`
+      let updatedTrip = await axios.put(url, tripToUpdate);
+      let updatedTripArray = this.state.books.map(existingTrip => {
+        return existingTrip._id === tripToUpdate._id ? updatedTrip.data : existingTrip;
+      })
+      this.setState({
+        books: updatedTripArray
+      });
+    }
+    catch (err) {
+      console.log('We have an error: ', err.response.data)
+    }
   }
 
   //Return JSX - which allows us to use javascript to render html
@@ -75,6 +142,24 @@ class Trip extends React.Component {
             </Card.Body>
           </Card>
         }
+        <Button onClick={(this.showModal)}>Show add modal for notes</Button>
+        
+        <Modal
+          show={this.state.showModal}
+          onHide={this.hideModalHandler}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>
+              Add Your Notes
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <TripFormModal
+              handleTripSubmit={this.handleTripSubmit}
+              hideModalHandler={this.hideModalHandler}
+            />
+          </Modal.Body>
+        </Modal>
       </>
     )
   }
