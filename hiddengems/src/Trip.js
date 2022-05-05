@@ -1,8 +1,9 @@
 import React from 'react';
 //import ReactDOM from 'react-dom';
 import { Form, Button} from "react-bootstrap";
-import Carousel from 'react-bootstrap/Carousel';
+//import Carousel from 'react-bootstrap/Carousel';
 import './App.css';
+import { withAuth0 } from '@auth0/auth0-react';
 import axios from 'axios'
 //Create an app component from react's original component. Similar to how classes work
 class Trip extends React.Component {
@@ -18,18 +19,35 @@ class Trip extends React.Component {
   // This function provides you with the ability to request(or 'get') map data.
   getMap = async (e) => {
     e.preventDefault();
-    console.log("here");
-    try {
-       let mapData = `${process.env.REACT_APP_SERVER}/trip?location=${this.state.location}`;
-       console.log(mapData);
-       let mapResults = await axios.get(mapData);
-       console.log(mapResults);
-       this.setState({
-         map: mapResults.data,
-         location: this.location
-       })
-    } catch (error) {
-      console.log('Not receiving Maps.');
+  
+console.log("here");
+    //Check if token is verified/authorized, send a token
+    if (this.props.auth0.isAuthenticated) {
+        
+        let res = await this.props.auth0.getIdTokenClaims();
+      const jwt = res.__raw;
+
+      const tripResults = await axios.get(`${process.env.REACT_APP_SERVER}/trip?location=${this.state.location}`, { headers: {"Authorization" : `Bearer ${jwt}`} });
+
+      console.log(tripResults);
+
+      this.setState({
+        Triprequest: tripResults.data
+      });
+
+
+      // try {
+      //   let mapData = `${process.env.REACT_APP_SERVER}/trip?location=${this.state.location}`;
+      //   console.log(mapData);
+      //   let mapResults = await axios.get(mapData);
+      //   console.log(mapResults);
+      //   this.setState({
+      //     map: mapResults.data,
+      //     location: this.location
+      //   })
+      // } catch (error) {
+      //   console.log('Not receiving Maps.');
+      // };
     }
 
   }
@@ -100,4 +118,4 @@ class Trip extends React.Component {
 }
 
 //Make the component available for import
-export default Trip; 
+export default withAuth0(Trip); 

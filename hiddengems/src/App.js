@@ -57,9 +57,9 @@ class App extends React.Component {
               : <><h2>Please log in!</h2></>}
             </Route>
             <Trip/>
-            <Route exact path = "/Profile.js">
+            {/* <Route exact path = "/Profile.js">
               <Profile />
-            </Route>
+            </Route> */}
           </Switch>
           <Footer />
         </Router>
