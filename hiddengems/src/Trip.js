@@ -5,7 +5,7 @@ import './App.css';
 import { withAuth0 } from '@auth0/auth0-react';
 import axios from 'axios'
 import TripFormModal from './TripFormModal';
-
+import TripUpdateModal from './TripUpdateModal';
 //Create an app component from react's original component. Similar to how classes work
 class Trip extends React.Component {
   constructor(props) {
@@ -13,7 +13,10 @@ class Trip extends React.Component {
     this.state = {
       location: '',
       Triprequest: null,
-      showModal: false
+      showModal: false,
+      notes: [],
+      notesToUpdate: '',
+      showUpdateModal: false
     }
   }
 
@@ -63,25 +66,66 @@ class Trip extends React.Component {
     })
   }
 
-  getTrip = async (trip) => {
+  showUpdateModal = () => {
+    this.setState({
+      showUpdateModal: true
+    })
+  }
+  
+  hideUpdateModal = () => {
+    this.setState({
+      showUpdateModal: false
+    })
+  }
+  getTrip = async () => {
     try {
-      let url = `${process.env.REACT_APP_SERVER}/trip`
-      let createdTrip = await axios.get(url, trip)
+      let url = `${process.env.REACT_APP_SERVER}/trip?location=${this.state.location}`;
+      let createdTrip = await axios.get(url)
       this.setState({
-        Triprequest: createdTrip
+        Triprequest: createdTrip.data
       })
+      
     }
     catch (err) {
       console.log('We have an error: ', err.response.data)
     }
   }
 
+  getNotes = async (trip) => {
+    try {
+      if (this.props.auth0.isAuthenticated) {
+        const res = await this.props.auth0.getIdTokenClaims();
+        const jwt = res.__raw;
+        
+        const config = {
+          method:'get',
+          baseURL: process.env.REACT_APP_SERVER,
+          url:'/notes',
+          headers: {Authorization: `Bearer ${jwt}`}
+        }
+        const noteResults = await axios(config);
+        console.log('HELLOOOOOOOOOOO')
+        // let url = `${process.env.REACT_APP_SERVER}/trip`
+        // let createdNotes = await axios.get(url, trip)
+        
+        this.setState({
+          notes: noteResults.data
+        })
+      }
+    }
+    catch (err) {
+      console.log('We have an error: ', err.response.data)
+    }
+  }
+
+  
   postTrip = async (trip) => {
     try {
       let url = `${process.env.REACT_APP_SERVER}/trip`
       let createdTrip = await axios.post(url, trip)
       this.setState({
-        Triprequest: [...this.state.Triprequest, createdTrip.data]
+        notes: [...this.state.notes, createdTrip.data]
+
       })
     }
     catch (err) {
@@ -89,15 +133,15 @@ class Trip extends React.Component {
     }
   }
 
-  updateTrip = async (tripToUpdate) => {
+  updateNotes = async (notesToUpdate) => {
     try {
-      let url = `${process.env.REACT_APP_SERVER}/trip/${tripToUpdate._id}`
-      let updatedTrip = await axios.put(url, tripToUpdate);
-      let updatedTripArray = this.state.books.map(existingTrip => {
-        return existingTrip._id === tripToUpdate._id ? updatedTrip.data : existingTrip;
+      let url = `${process.env.REACT_APP_SERVER}/notes/${notesToUpdate._id}`
+      let updatedNotes = await axios.put(url, notesToUpdate);
+      let updatedNotesArray = this.state.notes.map(existingNotes => {
+        return existingNotes._id === notesToUpdate._id ? updatedNotes.data : existingNotes;
       })
       this.setState({
-        books: updatedTripArray
+        notes: updatedNotesArray
       });
     }
     catch (err) {
@@ -105,13 +149,34 @@ class Trip extends React.Component {
     }
   }
 
+  deleteNotes = async (id) => {
+    try {
+      let url = `${process.env.REACT_APP_SERVER}/notes/${id}`;
+      await axios.delete(url);
+      let updatedNotes = this.state.notes.filter(notes => notes.id !== id);
+      this.setState({
+        notes: updatedNotes
+      });
+    }
+    catch (err) {
+      console.log('We have an error: ', err.response.data)
+    }
+  }
+
+
+  componentDidMount() {
+    this.getNotes();
+  }
+
+
   //Return JSX - which allows us to use javascript to render html
   render() {
+    console.log(this.state.notes);
     let description = this.state.Triprequest
       && this.state.Triprequest.wikipedia_extracts
       && this.state.Triprequest.wikipedia_extracts.text
-        ? this.state.Triprequest.wikipedia_extracts.text 
-        : "Sorry, this attraction has no description :(";
+      ? this.state.Triprequest.wikipedia_extracts.text
+      : "Sorry, this attraction has no description :(";
 
     // let image = this.state.Triprequest
     // && this.state.Triprequest.image
@@ -143,7 +208,51 @@ class Trip extends React.Component {
           </Card>
         }
         <Button onClick={(this.showModal)}>Show add modal for notes</Button>
-        
+
+        <Card style={{ width: '18rem' }}>
+
+          <Card.Body>
+            <Card.Title>{this.state.notes.title}</Card.Title>
+            <Card.Text>
+              {this.state.notes.description}
+            </Card.Text>
+            <Button variant="primary">Go somewhere</Button>
+          </Card.Body>
+        </Card>
+
+        {this.state.notes.length ? (
+          this.state.notes.map((data) => {
+            return (
+              <Card key={data._id}>
+                <Card.Title>
+                  Title: {data.title}
+                </Card.Title>
+                <Card.Text>
+                  Description: {data.description}
+                </Card.Text>
+                <Card.Text>
+                Likes:{data.likes}
+                </Card.Text>
+                <Card.Text>
+                 Dislikes: {data.dislikes}
+                </Card.Text>
+                
+              <Button onClick={this.showUpdateModal}>Update</Button>
+              <Button onClick={this.deleteNotes}>Delete</Button>
+
+              </Card>
+            )
+          })
+        )
+          :
+          (
+            <p>No notes Found</p>
+          )}
+
+
+
+
+
         <Modal
           show={this.state.showModal}
           onHide={this.hideModalHandler}
@@ -160,10 +269,30 @@ class Trip extends React.Component {
             />
           </Modal.Body>
         </Modal>
+
+        <Modal
+          show={this.state.showUpdateModal}
+          onHide={() => this.setState({ showUpdateModal: false })}
+        >
+      <Modal.Header closeButton>
+            <Modal.Title>
+              Update Trip
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <TripUpdateModal
+              updateNotes={this.updateNotes}
+              hideUpdateModal={() => this.setState({ showUpdateModal: false })}
+              notesToUpdate={this.state.notesToUpdate}
+            />
+          </Modal.Body>
+        </Modal>
+
+        
       </>
     )
-  }
 
+  }
 }
 
 

@@ -47,11 +47,33 @@ class App extends React.Component {
   //     user: '',
   //   })
   // }
+  
+  
+
+  // HANDLE SUBMIT FOR UPDATE
+  handleTripSubmit = (e) => {
+     e.prevent.Default();
+     let tripNotes = {
+       title: e.target.title.value,
+       description: e.target.description.value,
+       likes: e.target.likes.value,
+       dislikes: e.target.dislikes.value,
+       
+     }
+     this.postNotes(tripNotes);
+  }
+
 
   render() {
     console.log(this.props.auth0.isAuthenticated);
+
     return (
       <>
+
+
+
+
+
         <Router>
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
         <Navbar.Brand>Hidden Gems!!!!</Navbar.Brand>
