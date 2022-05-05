@@ -18,7 +18,7 @@ class Triprequest extends React.Component {
 
   fetchTrip = async () => {
     try {
-      if (this.props.auth0.isAuhtorized) {
+      if (this.props.auth0.isAuthorized) {
         let res = await this.props.auth0.getIdTokenClaims();
         const jwt = res.__raw;
         const config = {
