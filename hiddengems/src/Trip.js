@@ -1,7 +1,7 @@
 import React from 'react';
 //import ReactDOM from 'react-dom';
-import { Form, Button} from "react-bootstrap";
-//import Carousel from 'react-bootstrap/Carousel';
+import { Form, Button, Carousel} from "react-bootstrap";
+
 import './App.css';
 import { withAuth0 } from '@auth0/auth0-react';
 import axios from 'axios'
@@ -11,7 +11,8 @@ class Trip extends React.Component {
     super(props);
     this.state = {
       map: [],
-      location: ''
+      location: '',
+      Triprequest:[]
     }
   }
 
@@ -65,37 +66,40 @@ console.log("here");
   render() {
 
     //this.props.data holds the array of objects for the user's trips
-    // const tripMap = this.mapResults.map((x, index) => (
-
-    //   //create an array of trips bases on 
-    //   <Carousel>
-    //     <Carousel.Item key={index}>
-    //       <img
-    //         className="tripImg"
-    //         //src={x.image}
-    //         alt={x.location}
-    //       />
-    //       <Carousel.Caption>
-    //         <h3>{x.location}</h3>
-    //         <p>{x.subject}</p>
-    //       </Carousel.Caption>
-    //       <div>
-    //         <Button onClick="">
-    //           Edit
-    //         </Button>
-    //         <Button onClick="">
-    //           Delete
-    //         </Button>
-           
-    //       </div>
-    //     </Carousel.Item>
-    //   </Carousel>
-
-    // ));
-
+    
+    //create an array of trips bases on 
+        
+  
     //render the tripMap array
     return (
       <>
+    <Carousel>
+        {this.state.Triprequest.length ? ( 
+          
+          
+          this.state.Triprequest.map((x, index) => (
+            <Carousel.Item key={index}>
+          <img
+            className="tripImg"
+            src={x.data.image}
+            alt={x.data.name}
+            />
+          <Carousel.Caption>
+            <h3>{x.data.name}</h3>
+            <p>{x.data.wikipedia_extracts.text}</p>
+          </Carousel.Caption>
+          <div>
+            <Button onClick="">
+              Edit
+            </Button>
+            <Button onClick="">
+              Delete
+            </Button>
+          </div>
+        </Carousel.Item>
+        
+        ))) : <p>No trips</p>};
+        </Carousel>
         <h3>Trips</h3>
         <Form onSubmit={this.getMap}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
