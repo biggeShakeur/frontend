@@ -2,7 +2,7 @@ import React from "react";
 import axios from 'axios';
 import { withAuth0 } from 'auth0-react';
 import { Carousel, Button, Modal } from 'react-bootstrap';
-// import Trip from './Trip';
+// import Trip from './Trip.js';
 import TripForm from './TripForm.js';
 
 
@@ -119,11 +119,9 @@ handleTripSubmit = (e) => {
         })}>
         {this.state.Triprequest.length ? (
           this.state.Triprequest.map((trip => {
+            return(
             <Carousel.Item key={trip._id}>
-              <Trip
-                deleteTrip={this.deleteTrip}
-                updateTrip={this.updateTrip}
-              />
+              {/* <Trip /> */}
 
               <Carousel.Caption>
                 <>
@@ -141,8 +139,9 @@ handleTripSubmit = (e) => {
                   Update
                 </Button>
               </Carousel.Caption>
+              )
             </Carousel.Item>
-          }))
+          )}))
         )
           :
           (
