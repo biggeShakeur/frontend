@@ -1,6 +1,5 @@
 import React from 'react';
 import { Form, Button, Card, Modal } from "react-bootstrap";
-import placeHolder from './img.jpg';
 import './App.css';
 import { withAuth0 } from '@auth0/auth0-react';
 import axios from 'axios'
@@ -37,12 +36,12 @@ class Trip extends React.Component {
       let res = await this.props.auth0.getIdTokenClaims();
       const jwt = res.__raw;
       const tripResults = await axios.get(`${process.env.REACT_APP_SERVER}/trip?location=${this.state.location}`, { headers: { "Authorization": `Bearer ${jwt}` } });
-      console.log(tripResults);
+      //console.log(tripResults);
 
       this.setState({
         Triprequest: tripResults.data
       }, console.log('trip location state set'));
-      console.log(tripResults);
+     // console.log(tripResults);
     }
 
 
@@ -203,17 +202,35 @@ class Trip extends React.Component {
     this.getNotes();
   }
 
+  //Testing a function to get an image for this location
+  getImage = async (id) => {
+    const imageLink = `https://api.unsplash.com/search/photos/?query=${this.state.location}&client_id=${process.env.REACT_APP_UNSPLASH}`;
+  
+  
+    let retrievedImage = await axios.get(imageLink);
+
+    //generate a random number
+    const num =  Math.floor(Math.random() * 9);
+
+  
+    //get image
+    console.log(retrievedImage.data.results[num]);
+    console.log(retrievedImage.data.results);
+  
+        this.setState({
+          imageUrl: retrievedImage.data.results[num].links.download
+        })
+  
+    //console.log(imageValue);
+    }
+
+
   //Open TripAdvisor hyperlink to show 'things to do' in the area via Trip Advisor
   openTripAdvisor = async (id) => {
     window.open(`https://www.tripadvisor.com/Search?q=${this.state.location}&blockRedirect=true&ssrc=A`);
   }
 
-  //Testing a function to get an image for this location
-  getImage = async (id) => {
-  const imageValue = `https://serpapi.com/search.json?engine=google&q=${this.state.location}&location=Austin%2C+Texas%2C+United+States&google_domain=google.com&gl=us&hl=en&api_key=${process.env.REACT_APP_SERPAPI}`;
 
-  //console.log(imageValue);
-  }
 
   //Return JSX - which allows us to use javascript to render html
   render() {
@@ -243,17 +260,17 @@ class Trip extends React.Component {
             </Button>
           </Form>
         </div>
-        <div class="div2">
+        <div className="div2">
           {this.state.Triprequest &&
 
             <Card>
-              <Card.Img variant="top" src={placeHolder} className="image"/>
+              <Card.Img variant="top" src={this.state.imageUrl} className="image"/>
               <Card.Body className="c-body">
                 <Card.Title>{this.state.Triprequest.name}</Card.Title>
                 <Card.Text>
                   {description}
                 </Card.Text>
-                <div class="button-theme">
+                <div className="button-theme">
                 <Button variant="success" onClick={this.openTripAdvisor}>Things to Do</Button>
                 <Button onClick={(this.showModal)}>Add Notes</Button>
                 </div>
