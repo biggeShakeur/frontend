@@ -66,17 +66,32 @@ class Trip extends React.Component {
     })
   }
 
-  showUpdateModal = () => {
+  showUpdateModal = (notes) => {
     this.setState({
       showUpdateModal: true
+
     })
+    this.setNotesToUpdate(notes);
   }
-  
+
   hideUpdateModal = () => {
     this.setState({
       showUpdateModal: false
     })
   }
+ // use this..
+  setNotesToUpdate = (updateNotes) => {
+    this.setState({
+      notesToUpdate: updateNotes
+    })
+  }
+
+  removesNotes = (removeNotes) => {
+    this.setState ({
+      notesToUpdate: removeNotes
+    })
+  }
+
   getTrip = async () => {
     try {
       let url = `${process.env.REACT_APP_SERVER}/trip?location=${this.state.location}`;
@@ -104,7 +119,6 @@ class Trip extends React.Component {
           headers: {Authorization: `Bearer ${jwt}`}
         }
         const noteResults = await axios(config);
-        console.log('HELLOOOOOOOOOOO')
         // let url = `${process.env.REACT_APP_SERVER}/trip`
         // let createdNotes = await axios.get(url, trip)
         
@@ -120,6 +134,7 @@ class Trip extends React.Component {
 
   
   postTrip = async (trip) => {
+    console.log(trip);
     try {
       let url = `${process.env.REACT_APP_SERVER}/trip`
       let createdTrip = await axios.post(url, trip)
@@ -135,6 +150,7 @@ class Trip extends React.Component {
 
   updateNotes = async (notesToUpdate) => {
     try {
+      console.log(notesToUpdate);
       let url = `${process.env.REACT_APP_SERVER}/notes/${notesToUpdate._id}`
       let updatedNotes = await axios.put(url, notesToUpdate);
       let updatedNotesArray = this.state.notes.map(existingNotes => {
@@ -150,13 +166,16 @@ class Trip extends React.Component {
   }
 
   deleteNotes = async (id) => {
+    console.log(id);
     try {
       let url = `${process.env.REACT_APP_SERVER}/notes/${id}`;
+      console.log('THis is your URL', url)
       await axios.delete(url);
-      let updatedNotes = this.state.notes.filter(notes => notes.id !== id);
-      this.setState({
-        notes: updatedNotes
-      });
+      this.getNotes();
+      // let updatedNotes = this.state.notes.filter(notes => notes.id !== id);
+      // this.setState({
+      //   notes: updatedNotes
+      // });
     }
     catch (err) {
       console.log('We have an error: ', err.response.data)
@@ -171,7 +190,6 @@ class Trip extends React.Component {
 
   //Return JSX - which allows us to use javascript to render html
   render() {
-    console.log(this.state.notes);
     let description = this.state.Triprequest
       && this.state.Triprequest.wikipedia_extracts
       && this.state.Triprequest.wikipedia_extracts.text
@@ -237,8 +255,8 @@ class Trip extends React.Component {
                  Dislikes: {data.dislikes}
                 </Card.Text>
                 
-              <Button onClick={this.showUpdateModal}>Update</Button>
-              <Button onClick={this.deleteNotes}>Delete</Button>
+              <Button onClick={() => this.showUpdateModal(data)}>Update</Button>
+              <Button onClick={() => this.deleteNotes(data._id)}>Delete</Button>
 
               </Card>
             )
