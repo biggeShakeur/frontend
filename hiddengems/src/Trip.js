@@ -16,13 +16,19 @@ class Trip extends React.Component {
       showModal: false,
       notes: [],
       notesToUpdate: '',
-      showUpdateModal: false
+      showUpdateModal: false,
+      imageUrl: ''
     }
   }
 
   // This function provides you with the ability to request(or 'get') map data.
   getMap = async (e) => {
     e.preventDefault();
+
+    //fire function to get image
+    this.getImage();
+
+// await axios.get();
 
 
 
@@ -99,6 +105,8 @@ class Trip extends React.Component {
       notesToUpdate: removeNotes
     })
   }
+
+
 
   getTrip = async () => {
     try {
@@ -198,6 +206,13 @@ class Trip extends React.Component {
   //Open TripAdvisor hyperlink to show 'things to do' in the area via Trip Advisor
   openTripAdvisor = async (id) => {
     window.open(`https://www.tripadvisor.com/Search?q=${this.state.location}&blockRedirect=true&ssrc=A`);
+  }
+
+  //Testing a function to get an image for this location
+  getImage = async (id) => {
+  const imageValue = `https://serpapi.com/search.json?engine=google&q=${this.state.location}&location=Austin%2C+Texas%2C+United+States&google_domain=google.com&gl=us&hl=en&api_key=${process.env.REACT_APP_SERPAPI}`;
+
+  //console.log(imageValue);
   }
 
   //Return JSX - which allows us to use javascript to render html
