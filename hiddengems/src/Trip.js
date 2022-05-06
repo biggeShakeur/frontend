@@ -93,7 +93,9 @@ class Trip extends React.Component {
       showUpdateModal: false
     })
   }
-  // use this..
+
+ // use this..
+
   setNotesToUpdate = (updateNotes) => {
     this.setState({
       notesToUpdate: updateNotes
@@ -101,12 +103,11 @@ class Trip extends React.Component {
   }
 
   removesNotes = (removeNotes) => {
-    this.setState({
+
+    this.setState ({
       notesToUpdate: removeNotes
     })
   }
-
-
 
   getTrip = async () => {
     try {
@@ -300,6 +301,7 @@ class Trip extends React.Component {
                   <Button variant="danger" onClick={() => this.deleteNotes(data._id)}>Delete</Button>
                 </div>
                 </Card>
+
             )
           })
       )
