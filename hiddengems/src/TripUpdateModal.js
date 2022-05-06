@@ -12,13 +12,15 @@ class TripUpdateModal extends React.Component{
       dislikes: e.target.dislikes.value || this.props.notesToUpdate.dislikes,
       _id: this.props.notesToUpdate._id,
       __v: this.props.notesToUpdate.__v
-    }
+    } 
+    console.log('HERE --->', e.target);
     this.props.updateNotes(notesWithUpdate);
   }
 
 
 
   render(){
+    console.log('Notes to Update', this.props.notesToUpdate);
     return(
       <Form onSubmit={this.handleSubmit}>
         <Form.Group className='mb-3' controlId='title'>
