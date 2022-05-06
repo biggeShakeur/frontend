@@ -15,6 +15,7 @@ import { withAuth0 } from '@auth0/auth0-react';
 import { Navbar, NavItem } from 'react-bootstrap';
 import Login from './Login.js';
 import Logout from './Logout.js';
+import houseImgPath from './images/HIDDEN_GEMS_-_Logo_2022-05-06_00-03-04-removebg-preview.png';
 
 //import { Button, Modal } from "react-bootstrap";
 // import Login from "./Login";
@@ -75,8 +76,8 @@ class App extends React.Component {
 
 
         <Router>
-        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-        <Navbar.Brand>Hidden Gems!!!!</Navbar.Brand>
+        <Navbar collapseOnSelect expand="lg" bg="light" variant="light" className="navbar">
+        <Navbar.Brand ><img src={houseImgPath} alt="Biggie-Shakur"/></Navbar.Brand>
         <NavItem><Link to="/" className="nav-link">Home</Link></NavItem>
         <NavItem>{this.props.user?<Link to="/Profile">Profile</Link>:''}</NavItem>
         <NavItem><Link to="/Profile.js" className="nav-link">About</Link></NavItem>
@@ -88,8 +89,11 @@ class App extends React.Component {
             <Route exact path="/">
               {this.props.auth0.isAuthenticated 
               ?
-              <Trip/> 
+              <div className="parent">
+              <Trip/>
+              </div> 
               : <h2>Please log in!</h2>}
+              
             </Route>
             
             {/* <Route exact path = "/Profile.js">

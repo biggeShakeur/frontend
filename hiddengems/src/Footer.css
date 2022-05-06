@@ -1,0 +1,17 @@
+img, .foot-nav{
+  width: 45px;
+  height: 45px;
+  text-align: center;
+  align-self: center;
+}
+
+.foot-nav, .justify-content-center{
+  text-align: center;
+  align-self: center;
+  margin: 5px;
+  border-top: 2px solid grey;
+  background-color: white !important;
+  box-shadow: 0px 0px 0px 8px rgba(0,0,0,0.3);
+   opacity: 0.7;
+}
+
